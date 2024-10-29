@@ -41,18 +41,18 @@ class Client extends BaseClient
      *
      * @return string
      */
-    public function getLoginUrl(string $redirectUri = '', string $userType = 'admin', string $state = '')
+    public function getLoginUrl(string $redirectUri = '', string $userType = 'admin', string $state = '', bool $wwlogin = false)
     {
         $redirectUri || $redirectUri = $this->app->config['redirect_uri_single'];
         $state || $state = random_bytes(64);
         $params = [
-            'appid' => $this->app['config']['corp_id'],
+            'appid' => $wwlogin ? $this->app['config']['login_corp_id'] : $this->app['config']['corp_id'],
             'redirect_uri' => $redirectUri,
             'usertype' => $userType,
             'state' => $state,
         ];
 
-        return 'https://open.work.weixin.qq.com/wwopen/sso/3rd_qrConnect?'.http_build_query($params);
+        return $wwlogin ? 'https://login.work.weixin.qq.com/wwlogin/sso/login?'.http_build_query($params) : 'https://open.work.weixin.qq.com/wwopen/sso/3rd_qrConnect?'.http_build_query($params);
     }
 
     /**
