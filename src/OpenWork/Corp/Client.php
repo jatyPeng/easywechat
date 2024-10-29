@@ -186,17 +186,23 @@ class Client extends BaseClient
      * 第三方根据code获取企业成员信息.
      *
      * @param string $code
+     * @param bool $serviceWwlogin
      *
      * @return mixed
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getUserByCode(string $code)
+    public function getUserByCode(string $code, bool $serviceWwlogin = false)
     {
         $params = [
             'code' => $code,
         ];
+
+        // 新版企微登录
+        if ($serviceWwlogin) {
+            return $this->httpGet('cgi-bin/service/auth/getuserinfo3rd', $params);
+        }
 
         return $this->httpGet('cgi-bin/service/getuserinfo3rd', $params);
     }
